@@ -6,9 +6,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UserMgmt {
-
   public Connection openConnection() {
     try {
+      Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306",
+          "root", null);
+          var stmt = conn.createStatement();
+          stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS userdb;");
+          stmt.execute("USE userdb;");
+          stmt.executeUpdate("""
+                        CREATE TABLE IF NOT EXISTS users(
+                          id INT AUTO_INCREMENT NOT NULL,
+                          username VARCHAR (20) NOT NULL,
+                          `password` VARCHAR (20) NOT NULL,
+                          gmail VARCHAR (30),
+                          PRIMARY KEY (id)
+                          );
+              """);
+
       return DriverManager.getConnection("jdbc:mysql://localhost:3306/userdb",
           "root", null);
     } catch (SQLException e) {
@@ -41,7 +55,6 @@ public class UserMgmt {
   }
 
   // to create table that fit in this project is in database.sql
-  
 
   public String insert(String username, String pw, String cfPw, String email) {
     Connection con = openConnection();
